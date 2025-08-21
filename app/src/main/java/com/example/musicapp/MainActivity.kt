@@ -25,20 +25,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.musicapp.ui.theme.MusicAppTheme
+import com.example.musicapp.view.HomeScreen
+import com.example.musicapp.view.LibraryScreen
+import com.example.musicapp.view.SearchScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MusicAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MusicApp(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            MusicApp()
         }
     }
 }
@@ -53,7 +49,7 @@ fun MusicApp() {
             navController = navController,
             startDestination = "home",
             modifier = Modifier.padding(innerPadding)
-        ){
+        ) {
             composable("home") { HomeScreen() }
             composable("search") { SearchScreen() }
             composable("library") { LibraryScreen() }

@@ -8,12 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun HomeScreen(){
+fun SearchScreen(){
     LazyColumn (
         modifier = Modifier
             .fillMaxSize()
@@ -21,14 +20,8 @@ fun HomeScreen(){
             .padding(16.dp)
     ) {
         item {
-            Text(text = "Home Screen", color = Color.White, fontSize = 22.sp)
+            Text(text = "Search Screen", color = Color.White, fontSize = 22.sp)
 
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
 }
