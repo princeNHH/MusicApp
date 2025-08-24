@@ -65,4 +65,7 @@ dependencies {
     // Debug tools
     debugImplementation(libs.compose.ui.tooling)
 
+    //icon
+    implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
+
 }

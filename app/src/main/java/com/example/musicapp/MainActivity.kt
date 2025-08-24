@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.musicapp.ui.theme.MusicAppTheme
 import com.example.musicapp.view.HomeScreen
 import com.example.musicapp.view.LibraryScreen
+import com.example.musicapp.view.PlayerScreen
 import com.example.musicapp.view.SearchScreen
 
 class MainActivity : ComponentActivity() {
@@ -50,9 +51,9 @@ fun MusicApp() {
             startDestination = "home",
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("home") { HomeScreen() }
+            composable("home") { PlayerScreen() }
             composable("search") { SearchScreen() }
-            composable("library") { LibraryScreen() }
+            composable("library") {LibraryScreen() }
         }
     }
 }
