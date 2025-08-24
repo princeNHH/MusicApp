@@ -60,6 +60,7 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.navigation.compose)
+    implementation(libs.appcompat.resources)
     kapt(libs.hilt.compiler)
 
     // Debug tools
@@ -67,5 +68,8 @@ dependencies {
 
     //icon
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
+
+    //background palette
+    implementation("androidx.palette:palette:1.0.0")
 
 }

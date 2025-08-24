@@ -1,9 +1,12 @@
 package com.example.musicapp.view
 
-import android.graphics.drawable.Icon
-import android.widget.ProgressBar
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,13 +16,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircleOutline
-import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Pause
@@ -29,14 +29,13 @@ import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -45,13 +44,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.palette.graphics.Palette
 import com.example.musicapp.MediaButton
+import com.example.musicapp.R
+import androidx.core.graphics.createBitmap
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,23 +66,39 @@ fun PlayerScreen() {
 
     var isAdded by rememberSaveable { mutableStateOf(false) }
 
+    var backgroundColor: List<Color> by remember { mutableStateOf(listOf(Color.White, Color.White)) }
+
+    val context = LocalContext.current
+//    val drawable = AppCompatResources.getDrawable(context, R.drawable.ic_launcher_background)
+    val drawable = AppCompatResources.getDrawable(context, R.mipmap.img_2)
+    val bitmap = drawable?.let { drawableToBitmap(it) } ?: createBitmap(1, 1)
+
+    // when update new thumbnail (bitmap)
+    LaunchedEffect(bitmap) {
+        getGradientColors(bitmap) { color ->
+            backgroundColor = color
+        }
+    }
 
     Scaffold { padding ->
 
+        Box(modifier = Modifier.fillMaxSize().background(brush = Brush.verticalGradient(backgroundColor)).blur(500.dp))
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF7E9AB0))
                 .padding(20.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
+
+            Image(
+                bitmap = bitmap.asImageBitmap(),
+                contentDescription = null,
                 modifier = Modifier
                     .clip(shape = MaterialTheme.shapes.small)
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .background(Color.LightGray)
+
             )
 
             Spacer(
@@ -194,6 +214,28 @@ fun PlayerScreen() {
             }
         }
 
+    }
+}
+
+fun getGradientColors(bitmap: Bitmap, onFinish: (List<Color>) -> Unit) {
+    Palette.from(bitmap).generate { palette ->
+        val vibrant = palette?.getVibrantColor(android.graphics.Color.GRAY) ?: android.graphics.Color.GRAY
+        val darkMuted = palette?.getDarkMutedColor(android.graphics.Color.DKGRAY) ?: android.graphics.Color.DKGRAY
+        onFinish(listOf(Color(vibrant), Color(darkMuted)))
+    }
+}
+
+fun drawableToBitmap(drawable: Drawable): Bitmap {
+    return if (drawable is BitmapDrawable) {
+        drawable.bitmap
+    } else {
+        val width = if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 1
+        val height = if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 1
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        bitmap
     }
 }
 
