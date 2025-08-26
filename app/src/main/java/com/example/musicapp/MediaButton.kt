@@ -2,6 +2,7 @@ package com.example.musicapp
 
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
@@ -37,7 +38,6 @@ fun MediaButton(
             .background(backGroundColor, shape = MaterialTheme.shapes.extraLarge),
         onClick = onClick
     ) {
-
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,

@@ -2,8 +2,10 @@ package com.example.musicapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -17,8 +19,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,16 +48,17 @@ class MainActivity : ComponentActivity() {
 fun MusicApp() {
     val navController = rememberNavController()
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
+        bottomBar = { BottomNavigationBar(navController) },
+        contentWindowInsets = WindowInsets(0,0,0,0)
     ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = "home",
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("home") { PlayerScreen() }
+            composable("home") { HomeScreen() }
             composable("search") { SearchScreen() }
-            composable("library") {LibraryScreen() }
+            composable("library") { LibraryScreen() }
         }
     }
 }
@@ -66,15 +71,14 @@ fun BottomNavigationBar(navController: NavHostController) {
         NavItem("library", Icons.Default.List, "Library")
     )
 
-
-    NavigationBar {
+    NavigationBar{
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         items.forEach { item ->
             NavigationBarItem(
                 icon = { Icon(item.icon, contentDescription = item.label) },
                 label = { Text(item.label) },
                 selected = currentRoute == item.route,
-                onClick = { navController.navigate(item.route) }
+                onClick = { navController.navigate(item.route) },
             )
         }
     }
