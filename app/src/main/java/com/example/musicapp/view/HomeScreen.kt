@@ -65,7 +65,9 @@ fun HomeScreen(){
             dragHandle = null,
             contentWindowInsets = { WindowInsets(0,0,0,0) }
         ) {
-            PlayerScreen()
+            PlayerScreen(onclick = {
+                openBottomSheet.value = false
+            })
         }
     }
 }
